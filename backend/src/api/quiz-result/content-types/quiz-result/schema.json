@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "quiz_results",
+  "info": {
+    "singularName": "quiz-result",
+    "pluralName": "quiz-results",
+    "displayName": "Quiz Result",
+    "description": "A student's result for a quiz attempt"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "student": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "quiz": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::quiz.quiz",
+      "inversedBy": "quizResults"
+    },
+    "score": {
+      "type": "decimal",
+      "required": true,
+      "min": 0,
+      "max": 100
+    },
+    "correctAnswers": {
+      "type": "integer",
+      "required": true,
+      "min": 0
+    },
+    "totalQuestions": {
+      "type": "integer",
+      "required": true,
+      "min": 1
+    },
+    "submittedAt": {
+      "type": "datetime",
+      "required": true
+    }
+  }
+}
