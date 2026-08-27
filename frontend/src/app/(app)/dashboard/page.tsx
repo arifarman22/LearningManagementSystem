@@ -12,10 +12,8 @@ export default function DashboardRedirectPage() {
   React.useEffect(() => {
     if (isLoading) return;
     if (!isAuthenticated) { router.replace('/login'); return; }
-    const route = defaultRouteForRole(user?.role?.type);
-    // Prevent infinite loop if role is unknown
-    if (route === '/dashboard') { router.replace('/student/dashboard'); return; }
-    router.replace(route);
+    if (!user?.role?.type) return; // wait for role to be populated
+    router.replace(defaultRouteForRole(user.role.type));
   }, [isLoading, isAuthenticated, user, router]);
 
   return (
