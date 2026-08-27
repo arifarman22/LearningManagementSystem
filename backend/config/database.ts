@@ -23,10 +23,10 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Database 
               : false,
           },
       pool: {
-        min: env.int('DATABASE_POOL_MIN', 2),
-        max: env.int('DATABASE_POOL_MAX', 10),
+        min: 0,
+        max: env.int('DATABASE_POOL_MAX', 5),
       },
-      acquireConnectionTimeout: env.int('DATABASE_CONNECTION_TIMEOUT', 60000),
+      acquireConnectionTimeout: env.int('DATABASE_CONNECTION_TIMEOUT', 30000),
     },
   } as Core.Config.Database;
 };

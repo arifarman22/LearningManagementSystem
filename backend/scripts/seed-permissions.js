@@ -45,6 +45,30 @@ async function req(method, path, body, token) {
 }
 
 // Permissions each role should have — keys match Strapi 5 format: api::<name>
+const ADMIN_PERMISSIONS = {
+  'api::admin-panel': { controller: 'admin-panel', actions: ['me', 'listUsers', 'getUser', 'changeRole', 'blockUser', 'unblockUser', 'deleteUser', 'getStats', 'listRoles'] },
+  'api::course':      { controller: 'course',      actions: ['find', 'findOne', 'create', 'update', 'delete', 'publish', 'unpublish'] },
+  'api::lesson':      { controller: 'lesson',      actions: ['find', 'findOne', 'create', 'update', 'delete', 'reorder'] },
+  'api::quiz':        { controller: 'quiz',        actions: ['find', 'findOne', 'create', 'update', 'delete'] },
+  'api::question':    { controller: 'question',    actions: ['find', 'findOne', 'create', 'update', 'delete'] },
+  'api::option':      { controller: 'option',      actions: ['find', 'findOne', 'create', 'update', 'delete'] },
+  'api::quiz-result': { controller: 'quiz-result', actions: ['find', 'findOne', 'submit'] },
+  'api::enrollment':  { controller: 'enrollment',  actions: ['find', 'findOne', 'create', 'delete', 'myCourses'] },
+  'api::blog-post':   { controller: 'blog-post',   actions: ['find', 'findOne', 'getBySlug', 'create', 'update', 'publish', 'unpublish', 'delete'] },
+};
+
+const CONTENT_MANAGER_PERMISSIONS = {
+  'api::course':      { controller: 'course',      actions: ['find', 'findOne', 'create', 'update', 'delete', 'publish', 'unpublish'] },
+  'api::lesson':      { controller: 'lesson',      actions: ['find', 'findOne', 'create', 'update', 'delete', 'reorder'] },
+  'api::quiz':        { controller: 'quiz',        actions: ['find', 'findOne', 'create', 'update', 'delete'] },
+  'api::question':    { controller: 'question',    actions: ['find', 'findOne', 'create', 'update', 'delete'] },
+  'api::option':      { controller: 'option',      actions: ['find', 'findOne', 'create', 'update', 'delete'] },
+  'api::quiz-result': { controller: 'quiz-result', actions: ['find', 'findOne'] },
+  'api::enrollment':  { controller: 'enrollment',  actions: ['find', 'findOne'] },
+  'api::blog-post':   { controller: 'blog-post',   actions: ['find', 'findOne', 'getBySlug', 'create', 'update', 'publish', 'unpublish', 'delete'] },
+  'api::lesson-progress': { controller: 'lesson-progress', actions: ['find', 'findOne', 'courseProgress'] },
+};
+
 const INSTRUCTOR_PERMISSIONS = {
   'api::course':           { controller: 'course',          actions: ['find', 'findOne', 'create', 'update', 'delete', 'publish', 'unpublish'] },
   'api::lesson':           { controller: 'lesson',          actions: ['find', 'findOne', 'create', 'update', 'delete', 'reorder'] },
@@ -57,6 +81,7 @@ const INSTRUCTOR_PERMISSIONS = {
 };
 
 const STUDENT_PERMISSIONS = {
+  'api::blog-post': { controller: 'blog-post', actions: ['find', 'findOne', 'getBySlug'] },
   'api::course':           { controller: 'course',          actions: ['find', 'findOne'] },
   'api::lesson':           { controller: 'lesson',          actions: ['find', 'findOne'] },
   'api::enrollment':       { controller: 'enrollment',      actions: ['find', 'findOne', 'create', 'delete', 'myCourses'] },
@@ -68,14 +93,15 @@ const STUDENT_PERMISSIONS = {
 };
 
 const AUTHENTICATED_PERMISSIONS = {
-  'api::course':           { controller: 'course',          actions: ['find', 'findOne', 'create', 'update', 'delete', 'publish', 'unpublish'] },
-  'api::lesson':           { controller: 'lesson',          actions: ['find', 'findOne', 'create', 'update', 'delete', 'reorder'] },
-  'api::enrollment':       { controller: 'enrollment',      actions: ['find', 'findOne', 'create', 'delete', 'myCourses'] },
-  'api::quiz':             { controller: 'quiz',            actions: ['find', 'findOne', 'create', 'update', 'delete'] },
-  'api::question':         { controller: 'question',        actions: ['find', 'findOne', 'create', 'update', 'delete'] },
-  'api::option':           { controller: 'option',          actions: ['find', 'findOne', 'create', 'update', 'delete'] },
-  'api::quiz-result':      { controller: 'quiz-result',     actions: ['find', 'findOne', 'submit'] },
-  'api::lesson-progress':  { controller: 'lesson-progress', actions: ['find', 'findOne', 'create', 'courseProgress'] },
+  'api::blog-post': { controller: 'blog-post', actions: ['find', 'findOne', 'getBySlug'] },
+  'api::course':           { controller: 'course',          actions: ['find', 'findOne'] },
+  'api::lesson':           { controller: 'lesson',          actions: ['find', 'findOne'] },
+  'api::enrollment':       { controller: 'enrollment',      actions: ['find', 'findOne'] },
+  'api::quiz':             { controller: 'quiz',            actions: ['find', 'findOne'] },
+  'api::question':         { controller: 'question',        actions: ['find', 'findOne'] },
+  'api::option':           { controller: 'option',          actions: ['find', 'findOne'] },
+  'api::quiz-result':      { controller: 'quiz-result',     actions: ['find', 'findOne'] },
+  'api::lesson-progress':  { controller: 'lesson-progress', actions: ['find', 'findOne'] },
 };
 
 async function main() {
@@ -126,6 +152,17 @@ async function main() {
     if (updateRes.status !== 200) {
       console.error('  Error:', JSON.stringify(updateRes.body).slice(0, 300));
     }
+  }
+
+  // admin role
+  const adminRole = roles.find(r => r.name.toLowerCase() === 'admin');
+  if (adminRole) await applyPermissions(adminRole, ADMIN_PERMISSIONS);
+  else console.warn('No admin role found — skipping admin permissions');
+
+  // content-manager role
+  const contentManagerRole = roles.find(r => r.name.toLowerCase() === 'content-manager');
+  if (contentManagerRole) {
+    await applyPermissions(contentManagerRole, CONTENT_MANAGER_PERMISSIONS);
   }
 
   await applyPermissions(roleMap.authenticated, AUTHENTICATED_PERMISSIONS);

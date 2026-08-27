@@ -27,7 +27,7 @@ export default factories.createCoreController('api::enrollment.enrollment' as an
 
   async create(ctx) {
     const user = getAuthUser(ctx);
-    if (!isRole(user, 'student', 'admin', 'authenticated')) return ctx.forbidden('Forbidden');
+    if (!isRole(user, 'student', 'admin')) return ctx.forbidden('Forbidden');
 
     const courseDocId = (ctx.request.body as any)?.data?.course;
     if (!courseDocId) return ctx.badRequest('course is required');
@@ -49,7 +49,7 @@ export default factories.createCoreController('api::enrollment.enrollment' as an
 
   async delete(ctx) {
     const user = getAuthUser(ctx);
-    if (!isRole(user, 'student', 'admin', 'authenticated')) return ctx.forbidden('Forbidden');
+    if (!isRole(user, 'student', 'admin')) return ctx.forbidden('Forbidden');
 
     const enrollment = await strapi.db.query('api::enrollment.enrollment').findOne({
       where: { documentId: ctx.params.id },
@@ -68,9 +68,9 @@ export default factories.createCoreController('api::enrollment.enrollment' as an
 
     const enrollments = await strapi.db.query('api::enrollment.enrollment').findMany({
       where: { student: user.id, status: 'active' },
-      populate: ['course', 'course.instructor'],
+      populate: ['course', 'course.instructor', 'course.lessons', 'course.thumbnail'],
     });
 
-    return ctx.send({ data: enrollments.map((e: any) => e.course).filter(Boolean) });
+    return ctx.send({ data: enrollments });
   },
 }));

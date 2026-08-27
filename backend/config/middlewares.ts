@@ -21,8 +21,10 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Middlewar
     name: 'strapi::cors',
     config: {
       enabled: true,
-      headers: '*',
+      headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
       origin: env.array('CORS_ORIGIN', ['http://localhost:3000']),
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      keepHeaderOnError: true,
     },
   },
   'strapi::poweredBy',

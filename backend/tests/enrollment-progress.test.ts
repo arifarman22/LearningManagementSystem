@@ -1,3 +1,5 @@
+export {};
+
 const BASE = process.env.TEST_BASE_URL ?? 'http://127.0.0.1:1337';
 const api  = (path: string) => `${BASE}/api${path}`;
 

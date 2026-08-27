@@ -1,7 +1,7 @@
 import { factories } from '@strapi/strapi';
 import { getAuthUser, isRole, requireCourseOwnership, requireEnrollment } from '../../../middlewares/auth';
 
-const MANAGERS = ['authenticated', 'admin', 'content-manager', 'instructor'] as const;
+const MANAGERS = ['admin', 'content-manager', 'instructor'] as const;
 
 async function getLessonWithCourse(strapi: any, lessonId: string, ctx: any) {
   const lesson = await strapi.db.query('api::lesson.lesson').findOne({
@@ -16,10 +16,10 @@ export default factories.createCoreController('api::lesson.lesson' as any, ({ st
 
   async find(ctx) {
     const user = ctx.state?.user;
-    const courseDocId = (ctx.query as any)?.filters?.course;
-
     if (!user) return ctx.unauthorized('Authentication required');
-    if (!courseDocId) return ctx.badRequest('course filter is required');
+    const courseDocId = (ctx.query as any)?.filters?.course?.documentId?.$eq
+      ?? (ctx.query as any)?.filters?.course;
+    if (!courseDocId || typeof courseDocId !== 'string') return ctx.badRequest('course filter is required');
 
     const course = await strapi.db.query('api::course.course').findOne({
       where: { documentId: courseDocId },
@@ -39,10 +39,11 @@ export default factories.createCoreController('api::lesson.lesson' as any, ({ st
       }
     }
 
-    // Replace documentId filter with numeric id for Strapi's query engine
-    const filters = { ...((ctx.query as any).filters ?? {}), course: course.id };
-    ctx.query = { ...ctx.query, filters, sort: 'order:asc' };
-    return super.find(ctx);
+    const lessons = await strapi.db.query('api::lesson.lesson').findMany({
+      where: { course: course.id },
+      orderBy: { order: 'asc' },
+    });
+    return ctx.send({ data: lessons });
   },
 
   async findOne(ctx) {

@@ -18,8 +18,15 @@ export default factories.createCoreService('api::course.course' as any, ({ strap
       throw { status: 400, message: 'status must be draft or published' };
     }
 
+    const slug = title.trim().toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-');
+
     const payload: any = {
       title: title.trim(),
+      slug,
       description: description.trim(),
       status: status ?? 'draft',
     };

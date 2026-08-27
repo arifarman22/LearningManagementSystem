@@ -5,28 +5,27 @@ export default factories.createCoreController('api::course.course' as any, ({ st
 
   async find(ctx) {
     const user = ctx.state?.user;
+    const populate = ['instructor', 'lessons'];
+
     if (!user || isRole(user, 'student')) {
-      ctx.query = {
-        ...ctx.query,
-        filters: { ...((ctx.query as any).filters ?? {}), status: 'published' },
-      };
-    } else if (isRole(user, 'instructor')) {
-      // Instructors see published courses + their own drafts
-      // Strapi 5 does not support $or at the top-level query filter via ctx.query,
-      // so we fetch manually and return
-      const allCourses = await strapi.db.query('api::course.course').findMany({
-        where: {
-          $or: [
-            { status: 'published' },
-            { instructor: user.id },
-          ],
-        },
-        populate: ['instructor'],
+      const courses = await strapi.db.query('api::course.course').findMany({
+        where: { status: 'published' },
+        populate,
       });
-      return ctx.send({ data: allCourses });
+      return ctx.send({ data: courses });
     }
-    // admin, content-manager, authenticated see all
-    return super.find(ctx);
+
+    if (isRole(user, 'instructor')) {
+      const courses = await strapi.db.query('api::course.course').findMany({
+        where: { $or: [{ status: 'published' }, { instructor: user.id }] },
+        populate,
+      });
+      return ctx.send({ data: courses });
+    }
+
+    // admin, content-manager — return all
+    const courses = await strapi.db.query('api::course.course').findMany({ populate });
+    return ctx.send({ data: courses });
   },
 
   async findOne(ctx) {
@@ -50,7 +49,7 @@ export default factories.createCoreController('api::course.course' as any, ({ st
 
   async create(ctx) {
     const user = getAuthUser(ctx);
-    if (!isRole(user, 'authenticated', 'admin', 'content-manager', 'instructor')) {
+    if (!isRole(user, 'admin', 'content-manager', 'instructor')) {
       return ctx.forbidden('Forbidden');
     }
 
@@ -70,7 +69,7 @@ export default factories.createCoreController('api::course.course' as any, ({ st
 
   async update(ctx) {
     const user = getAuthUser(ctx);
-    if (!isRole(user, 'authenticated', 'admin', 'content-manager', 'instructor')) {
+    if (!isRole(user, 'admin', 'content-manager', 'instructor')) {
       return ctx.forbidden('Forbidden');
     }
 
@@ -98,14 +97,14 @@ export default factories.createCoreController('api::course.course' as any, ({ st
 
   async delete(ctx) {
     const user = getAuthUser(ctx);
-    if (!isRole(user, 'authenticated', 'admin', 'content-manager', 'instructor')) {
+    if (!isRole(user, 'admin', 'content-manager', 'instructor')) {
       return ctx.forbidden('Forbidden');
     }
 
     const existing = await strapi.db.query('api::course.course').findOne({ where: { documentId: ctx.params.id } });
     if (!existing) return ctx.notFound('Course not found');
     const courseId = existing.id;
-    if (!isRole(user, 'authenticated', 'admin', 'content-manager')) {
+    if (!isRole(user, 'admin', 'content-manager')) {
       await requireCourseOwnership(strapi, courseId, user.id, ctx);
     }
 
@@ -115,7 +114,7 @@ export default factories.createCoreController('api::course.course' as any, ({ st
 
   async publish(ctx) {
     const user = getAuthUser(ctx);
-    if (!isRole(user, 'authenticated', 'admin', 'content-manager', 'instructor')) {
+    if (!isRole(user, 'admin', 'content-manager', 'instructor')) {
       return ctx.forbidden('Forbidden');
     }
 
@@ -138,7 +137,7 @@ export default factories.createCoreController('api::course.course' as any, ({ st
 
   async unpublish(ctx) {
     const user = getAuthUser(ctx);
-    if (!isRole(user, 'authenticated', 'admin', 'content-manager', 'instructor')) {
+    if (!isRole(user, 'admin', 'content-manager', 'instructor')) {
       return ctx.forbidden('Forbidden');
     }
 

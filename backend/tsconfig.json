@@ -35,9 +35,8 @@
     ".tmp/",
     ".strapi/",
 
-    // Do not include admin files in the server compilation
     "src/admin/",
-    // Do not include plugins in the server compilation
+   
     "src/plugins/**"
   ]
 }

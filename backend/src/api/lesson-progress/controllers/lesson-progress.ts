@@ -56,8 +56,11 @@ export default factories.createCoreController('api::lesson-progress.lesson-progr
   async courseProgress(ctx) {
     const user = getAuthUser(ctx);
 
+    const courseDocId = (ctx.query as any)?.course;
+    if (!courseDocId) return ctx.badRequest('course query param is required');
+
     const course = await strapi.db.query('api::course.course').findOne({
-      where: { documentId: ctx.params.id },
+      where: { documentId: courseDocId },
       populate: ['instructor'],
     });
     if (!course) return ctx.notFound('Course not found');
@@ -65,7 +68,6 @@ export default factories.createCoreController('api::lesson-progress.lesson-progr
     let studentId: number;
 
     if (isRole(user, 'student')) {
-      // Verify enrollment
       try {
         await requireEnrollment(strapi, user.id, course.id);
       } catch {
@@ -74,12 +76,10 @@ export default factories.createCoreController('api::lesson-progress.lesson-progr
       studentId = user.id;
     } else if (isRole(user, 'instructor')) {
       if (course.instructor?.id !== user.id) return ctx.forbidden('Forbidden');
-      // Instructor views a specific student's progress — require ?student=<id>
       const qStudentId = Number((ctx.query as any)?.student);
       if (!qStudentId) return ctx.badRequest('student query param required for instructors');
       studentId = qStudentId;
     } else {
-      // admin / content-manager / authenticated — require ?student=<id>
       const qStudentId = Number((ctx.query as any)?.student);
       if (!qStudentId) return ctx.badRequest('student query param required');
       studentId = qStudentId;
@@ -88,6 +88,6 @@ export default factories.createCoreController('api::lesson-progress.lesson-progr
     const progress = await (strapi.service('api::lesson-progress.lesson-progress') as any)
       .courseProgress(studentId, course.id);
 
-    return ctx.send({ data: progress });
+    return ctx.send(progress);
   },
 }));

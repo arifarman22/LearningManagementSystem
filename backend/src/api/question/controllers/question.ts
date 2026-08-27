@@ -1,9 +1,9 @@
 import { factories } from '@strapi/strapi';
 import { getAuthUser, isRole, requireCourseOwnership, requireEnrollment } from '../../../middlewares/auth';
 
-async function getQuizCourse(strapi: any, quizId: number, ctx: any) {
+async function getQuizCourse(strapi: any, quizDocId: string, ctx: any) {
   const quiz = await strapi.db.query('api::quiz.quiz').findOne({
-    where: { id: quizId },
+    where: { documentId: quizDocId },
     populate: ['course', 'course.instructor'],
   });
   if (!quiz) ctx.throw(404, 'Quiz not found');
@@ -14,10 +14,10 @@ export default factories.createCoreController('api::question.question' as any, (
 
   async find(ctx) {
     const user = getAuthUser(ctx);
-    const quizId = (ctx.query as any)?.filters?.quiz;
-    if (!quizId) return ctx.badRequest('quiz filter required');
+    const quizDocId = (ctx.query as any)?.filters?.quiz;
+    if (!quizDocId) return ctx.badRequest('quiz filter required');
 
-    const quiz = await getQuizCourse(strapi, Number(quizId), ctx);
+    const quiz = await getQuizCourse(strapi, String(quizDocId), ctx);
 
     if (isRole(user, 'student')) {
       try {
@@ -34,7 +34,7 @@ export default factories.createCoreController('api::question.question' as any, (
   async findOne(ctx) {
     const user = getAuthUser(ctx);
     const question = await strapi.db.query('api::question.question').findOne({
-      where: { id: ctx.params.id },
+      where: { documentId: ctx.params.id },
       populate: ['quiz', 'quiz.course', 'quiz.course.instructor'],
     });
     if (!question) return ctx.notFound('Question not found');
@@ -48,18 +48,18 @@ export default factories.createCoreController('api::question.question' as any, (
     } else if (isRole(user, 'instructor')) {
       if (question.quiz?.course?.instructor?.id !== user.id) return ctx.forbidden('Forbidden');
     }
-    return super.findOne(ctx);
+    return ctx.send({ data: question });
   },
 
   async create(ctx) {
     const user = getAuthUser(ctx);
     if (!isRole(user, 'admin', 'content-manager', 'instructor')) return ctx.forbidden('Forbidden');
 
-    const quizId = (ctx.request.body as any)?.data?.quiz;
-    if (!quizId) return ctx.badRequest('quiz is required');
+    const quizDocId = (ctx.request.body as any)?.data?.quiz;
+    if (!quizDocId) return ctx.badRequest('quiz is required');
 
     if (isRole(user, 'instructor')) {
-      const quiz = await getQuizCourse(strapi, Number(quizId), ctx);
+      const quiz = await getQuizCourse(strapi, String(quizDocId), ctx);
       await requireCourseOwnership(strapi, quiz.course?.id, user.id, ctx);
     }
     return super.create(ctx);
@@ -71,7 +71,7 @@ export default factories.createCoreController('api::question.question' as any, (
 
     if (isRole(user, 'instructor')) {
       const question = await strapi.db.query('api::question.question').findOne({
-        where: { id: ctx.params.id },
+        where: { documentId: ctx.params.id },
         populate: ['quiz', 'quiz.course', 'quiz.course.instructor'],
       });
       if (!question) return ctx.notFound('Question not found');
@@ -86,7 +86,7 @@ export default factories.createCoreController('api::question.question' as any, (
 
     if (isRole(user, 'instructor')) {
       const question = await strapi.db.query('api::question.question').findOne({
-        where: { id: ctx.params.id },
+        where: { documentId: ctx.params.id },
         populate: ['quiz', 'quiz.course', 'quiz.course.instructor'],
       });
       if (!question) return ctx.notFound('Question not found');

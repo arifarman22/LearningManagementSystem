@@ -6,10 +6,7 @@ const ADMIN_PASSWORD = (() => {
   return arg ? arg.split('=')[1] : '';
 })();
 
-if (!ADMIN_PASSWORD) {
-  console.error('Usage: node scripts/seed-test-users.js --admin-password=YOUR_PASSWORD');
-  process.exit(1);
-}
+
 
 async function req(method, path, body, token) {
   return new Promise((resolve, reject) => {
