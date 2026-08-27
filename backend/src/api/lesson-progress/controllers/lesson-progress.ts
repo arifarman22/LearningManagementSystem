@@ -81,7 +81,10 @@ export default factories.createCoreController('api::lesson-progress.lesson-progr
       studentId = qStudentId;
     } else {
       const qStudentId = Number((ctx.query as any)?.student);
-      if (!qStudentId) return ctx.badRequest('student query param required');
+      if (!qStudentId) {
+        // Admin viewing their own context — no meaningful progress
+        return ctx.send({ percentage: 0, completedLessons: 0, totalLessons: 0 });
+      }
       studentId = qStudentId;
     }
 
