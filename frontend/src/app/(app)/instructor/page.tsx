@@ -55,7 +55,6 @@ export default function InstructorDashboardPage() {
   const published = courses.filter((c) => c.status === 'published').length;
   const draft = courses.filter((c) => c.status === 'draft').length;
   const totalLessons = courses.reduce((s, c) => s + (c.lessons?.length ?? 0), 0);
-  const totalStudents = 0; // enrollments not aggregated here — shown per course
 
   const greeting = () => {
     const h = new Date().getHours();
@@ -140,10 +139,10 @@ export default function InstructorDashboardPage() {
                   {course.status}
                 </Badge>
                 <div className="flex items-center gap-1">
-                  <Button variant="ghost" size="xs" asChild>
-                    <Link href={`/instructor/courses/${course.documentId}`} className="no-underline"><Eye size={14} /></Link>
+                  <Button variant="ghost" size="xs" asChild title="Manage content">
+                    <Link href={`/instructor/courses/${course.documentId}`} className="no-underline"><Layers size={14} /></Link>
                   </Button>
-                  <Button variant="ghost" size="xs" asChild>
+                  <Button variant="ghost" size="xs" asChild title="Edit course details">
                     <Link href={`/instructor/courses/${course.documentId}/edit`} className="no-underline"><Edit3 size={14} /></Link>
                   </Button>
                 </div>
