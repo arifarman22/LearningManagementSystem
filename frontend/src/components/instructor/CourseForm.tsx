@@ -47,9 +47,11 @@ export function CourseForm({ initial, documentId, redirectBase }: CourseFormProp
     setSaving(true);
     setError(null);
     try {
-      const instructorPayload = canAssignInstructor && instructorId ? { instructor: Number(instructorId) } : {};
+      const instructorPayload = canAssignInstructor ? { instructor: instructorId ? Number(instructorId) : null } : {};
       if (documentId) {
-        await api.put(`/courses/${documentId}`, { data: { title, description, slug, ...instructorPayload } });
+        const updateData: any = { title, slug, ...instructorPayload };
+        if (description.trim()) updateData.description = description.trim();
+        await api.put(`/courses/${documentId}`, { data: updateData });
         const current = initial?.status;
         if (status !== current) {
           await api.patch(`/courses/${documentId}/${status === 'published' ? 'publish' : 'unpublish'}`, {});

@@ -134,6 +134,11 @@ export default function ContentCoursesPage() {
                       {course.status === 'published' ? <EyeOff size={14} /> : <Globe size={14} />}
                     </Button>
                     <Button variant="ghost" size="xs" asChild>
+                      <Link href={`/content/courses/${course.documentId}`} className="no-underline" title="Manage lessons & quiz">
+                        <Layers size={14} />
+                      </Link>
+                    </Button>
+                    <Button variant="ghost" size="xs" asChild>
                       <Link href={`/content/courses/${course.documentId}/edit`} className="no-underline" title="Edit"><Edit3 size={14} /></Link>
                     </Button>
                     <Button variant="ghost" size="xs" className="text-rose-500 hover:bg-rose-50" onClick={() => setDeleteTarget(course)} title="Delete">

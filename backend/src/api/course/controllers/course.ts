@@ -17,7 +17,7 @@ export default factories.createCoreController('api::course.course' as any, ({ st
 
     if (isRole(user, 'instructor')) {
       const courses = await strapi.db.query('api::course.course').findMany({
-        where: { $or: [{ status: 'published' }, { instructor: user.id }] },
+        where: { instructor: user.id },
         populate,
       });
       return ctx.send({ data: courses });
@@ -39,7 +39,7 @@ export default factories.createCoreController('api::course.course' as any, ({ st
     if (!user || isRole(user, 'student')) {
       if (course.status !== 'published') return ctx.notFound('Course not found');
     } else if (isRole(user, 'instructor')) {
-      if (course.status !== 'published' && course.instructor?.id !== user.id) {
+      if (course.instructor?.id !== user.id) {
         return ctx.notFound('Course not found');
       }
     }

@@ -46,7 +46,7 @@ export default factories.createCoreService('api::course.course' as any, ({ strap
       if (title.trim().length < 3) throw { status: 400, message: 'title must be at least 3 characters' };
       if (title.length > 200) throw { status: 400, message: 'title must be at most 200 characters' };
     }
-    if (description !== undefined && description.trim().length === 0) {
+    if (description !== undefined && description !== null && String(description).trim().length === 0) {
       throw { status: 400, message: 'description cannot be empty' };
     }
     if (status !== undefined && !['draft', 'published'].includes(status)) {
@@ -58,6 +58,7 @@ export default factories.createCoreService('api::course.course' as any, ({ strap
     if (description !== undefined) payload.description = description.trim();
     if (status !== undefined) payload.status = status;
     if (thumbnail !== undefined) payload.thumbnail = thumbnail;
+    if (data.instructor !== undefined) payload.instructor = data.instructor || null;
 
     return strapi.db.query('api::course.course').update({
       where: { id: courseId },
