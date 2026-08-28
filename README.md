@@ -3,9 +3,9 @@
 A full-stack Learning Management System built with **Next.js 15** (frontend) and **Strapi 5** (backend), backed by **PostgreSQL**.
 
 **Live stack:**
-- Frontend → [Vercel](https://vercel.com)
-- Backend → [Railway](https://railway.app)
-- Database → Railway PostgreSQL (or any managed Postgres)
+- Frontend → https://learning-management-system-flax-ten.vercel.app
+- Backend → https://learningmanagementsystem-production-d309.up.railway.app
+- Database → Neon PostgreSQL
 
 ---
 
@@ -319,20 +319,25 @@ Work through this checklist after deploying:
 
 ## Demo Accounts
 
-After deploying, create demo accounts via the Strapi admin panel or the `/register` page.
+Use these credentials to test the live deployment at https://learning-management-system-flax-ten.vercel.app
 
-### Recommended demo accounts
+### Test accounts
 
-| Role | Email | Password | Notes |
+| Role | Email | Password | Dashboard |
 |---|---|---|---|
-| Admin | `admin@demo.com` | `Demo1234!` | Created via Strapi admin panel — assign `admin` role |
-| Instructor | `instructor@demo.com` | `Demo1234!` | Register via `/register` — assign `instructor` role in admin |
-| Content Manager | `content@demo.com` | `Demo1234!` | Register via `/register` — assign `content-manager` role in admin |
-| Student | `student@demo.com` | `Demo1234!` | Register via `/register` — default `authenticated` role |
+| Admin | `admin@test.com` | `Test1234!` | `/admin/dashboard` |
+| Instructor | `instructor@test.com` | `Test1234!` | `/instructor` |
+| Content Manager | `content@test.com` | `Test1234!` | `/content` |
+| Student | `student@test.com` | `Test1234!` | `/student/dashboard` |
 
-### How to assign roles
+### Strapi admin panel
 
-1. Log in to Strapi admin: `https://<backend>.up.railway.app/admin`
+- URL: https://learningmanagementsystem-production-d309.up.railway.app/admin
+- Email: `arifarman7862@gmail.com`
+
+### How to assign roles (for new accounts)
+
+1. Log in to Strapi admin
 2. Go to **Content Manager → User**
 3. Find the user → click **Edit**
 4. Change the **Role** field → **Save**
@@ -344,21 +349,21 @@ After deploying, create demo accounts via the Strapi admin panel or the `/regist
 Test each role end-to-end after deployment:
 
 ### Admin
-1. Log in as `admin@demo.com`
+1. Log in as `admin@test.com`
 2. Should land on `/admin/dashboard` with platform stats
 3. Navigate to `/admin/users` — should see all users and be able to change roles
 4. Navigate to `/admin/courses`, `/admin/blog`, `/admin/quizzes`
 5. Sidebar should show: Dashboard, Users, Content, All Courses, Blog Posts, Quizzes, Blog
 
 ### Instructor
-1. Log in as `instructor@demo.com`
+1. Log in as `instructor@test.com`
 2. Should land on `/instructor` with course stats
 3. Navigate to `/instructor/courses` — should see only their own courses
 4. Create a new course at `/instructor/courses/new`
 5. Sidebar should show: Dashboard, My Courses
 
 ### Content Manager
-1. Log in as `content@demo.com`
+1. Log in as `content@test.com`
 2. Should land on `/content` with content stats
 3. Navigate to `/content/courses` — should see all courses with edit access
 4. Navigate to `/content/blog` — should see all blog posts
@@ -366,7 +371,7 @@ Test each role end-to-end after deployment:
 6. Should NOT see `/admin/*` routes
 
 ### Student
-1. Log in as `student@demo.com`
+1. Log in as `student@test.com`
 2. Should land on `/student/dashboard`
 3. Browse courses at `/courses` and enroll in one
 4. Navigate to `/my-learning` — enrolled course should appear with progress
