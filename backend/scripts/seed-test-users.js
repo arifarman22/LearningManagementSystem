@@ -80,8 +80,10 @@ async function main() {
   const users = usersRes.body?.results ?? [];
   console.log('\nUsers found:', users.map(u => `${u.email}(${u.id})`).join(', '));
 
+  let adminRole = roles.find(r => r.name.toLowerCase() === 'admin');
+
   const roleMap = {
-    'admin@test.com':       authRole?.id,
+    'admin@test.com':       adminRole?.id,
     'instructor@test.com':  instructorRole?.id,
     'instructor2@test.com': instructorRole?.id,
     'student@test.com':     studentRole?.id,

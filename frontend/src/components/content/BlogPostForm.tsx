@@ -18,11 +18,7 @@ export function BlogPostForm({ initial, documentId }: BlogPostFormProps) {
   const [title, setTitle] = React.useState(initial?.title ?? '');
   const [slug, setSlug] = React.useState(initial?.slug ?? '');
   const [body, setBody] = React.useState(initial?.body ?? '');
-  const [coverImageUrl, setCoverImageUrl] = React.useState(
-    initial?.coverImage && typeof initial.coverImage === 'object'
-      ? (initial.coverImage as { url: string }).url ?? ''
-      : '',
-  );
+  const [coverImageUrl, setCoverImageUrl] = React.useState(initial?.coverImageUrl ?? '');
   const [status] = React.useState<'draft' | 'published'>(initial?.status ?? 'draft');
   const [saving, setSaving] = React.useState(false);
   const [publishing, setPublishing] = React.useState(false);

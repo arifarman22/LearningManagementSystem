@@ -5,21 +5,44 @@ export default factories.createCoreController('api::quiz-result.quiz-result' as 
 
   async find(ctx) {
     const user = getAuthUser(ctx);
+    const populate = ['student', 'quiz', 'quiz.course'];
 
     if (isRole(user, 'student')) {
-      ctx.query = {
-        ...ctx.query,
-        filters: { ...((ctx.query as any).filters ?? {}), student: user.id },
-      };
-    } else if (isRole(user, 'instructor')) {
-      ctx.query = {
-        ...ctx.query,
-        filters: {
-          ...((ctx.query as any).filters ?? {}),
-          quiz: { course: { instructor: user.id } },
-        },
-      };
+      const results = await strapi.db.query('api::quiz-result.quiz-result').findMany({
+        where: { student: user.id },
+        populate,
+        orderBy: { submittedAt: 'desc' },
+        limit: 100,
+      });
+      return ctx.send({ data: results });
     }
+
+    if (isRole(user, 'instructor')) {
+      // Get instructor's course IDs first
+      const instructorCourses = await strapi.db.query('api::course.course').findMany({
+        where: { instructor: user.id },
+        select: ['id'],
+      });
+      const courseIds = instructorCourses.map((c: any) => c.id);
+      if (courseIds.length === 0) return ctx.send({ data: [] });
+
+      const quizzes = await strapi.db.query('api::quiz.quiz').findMany({
+        where: { course: { $in: courseIds } },
+        select: ['id'],
+      });
+      const quizIds = quizzes.map((q: any) => q.id);
+      if (quizIds.length === 0) return ctx.send({ data: [] });
+
+      const results = await strapi.db.query('api::quiz-result.quiz-result').findMany({
+        where: { quiz: { $in: quizIds } },
+        populate,
+        orderBy: { submittedAt: 'desc' },
+        limit: 100,
+      });
+      return ctx.send({ data: results });
+    }
+
+    // admin / content-manager
     return super.find(ctx);
   },
 

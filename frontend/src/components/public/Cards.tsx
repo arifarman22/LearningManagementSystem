@@ -121,7 +121,7 @@ export function CourseCardSkeleton({ className }: { className?: string }) {
 
 // ── BlogCard ──────────────────────────────────────────────────────────────────
 export function BlogCard({ post, className }: { post: BlogPost; className?: string }) {
-  const cover = resolveUrl(post.coverImage?.url) ?? getFallbackImage(post.title, BLOG_IMAGES, BLOG_DEFAULT);
+  const cover = resolveUrl(post.coverImageUrl) ?? getFallbackImage(post.title, BLOG_IMAGES, BLOG_DEFAULT);
   const date = post.publishedAt
     ? new Date(post.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
     : null;
@@ -140,7 +140,7 @@ export function BlogCard({ post, className }: { post: BlogPost; className?: stri
       <div className="relative aspect-[16/9] overflow-hidden">
         <Image
           src={cover}
-          alt={post.coverImage?.alternativeText ?? post.title}
+          alt={post.title}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-300"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

@@ -148,7 +148,7 @@ export function useCourseStudents(courseDocumentId: string, totalLessons: number
             try {
               const [progressRes, quizRes] = await Promise.all([
                 api.get<{ completedLessons: number; totalLessons: number; percentage: number }>(
-                  `/lesson-progress/course-progress?courseId=${courseDocumentId}&studentId=${enrollment.student?.id}`,
+                  `/lesson-progress/course-progress?course=${courseDocumentId}&student=${enrollment.student?.id}`,
                 ).catch(() => ({ completedLessons: 0, totalLessons, percentage: 0 })),
                 api.get<ApiListResponse<QuizResult>>(
                   `/quiz-results?filters[student][id]=${enrollment.student?.id}&populate[quiz]=true&pagination[pageSize]=10`,

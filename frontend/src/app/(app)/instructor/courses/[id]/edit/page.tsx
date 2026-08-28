@@ -34,8 +34,8 @@ export default function EditCoursePage({ params }: { params: Promise<{ id: strin
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <Link href={`/instructor/courses/${id}`} className="inline-flex items-center gap-1.5 text-sm text-neutral-500 hover:text-neutral-700 no-underline mb-4">
-          <ArrowLeft size={15} /> Back to course
+        <Link href="/instructor/courses" className="inline-flex items-center gap-1.5 text-sm text-neutral-500 hover:text-neutral-700 no-underline mb-4">
+          <ArrowLeft size={15} /> Back to my courses
         </Link>
         <h1 className="text-2xl font-bold text-neutral-900">Edit Course</h1>
         <p className="text-sm text-neutral-500 mt-1 truncate">{course.title}</p>

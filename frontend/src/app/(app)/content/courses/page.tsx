@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Plus, Search, Edit3, Trash2, Globe, EyeOff, BookOpen, Layers, Filter } from 'lucide-react';
+import { Plus, Search, Edit3, Trash2, Globe, EyeOff, BookOpen, Layers, Users, Filter } from 'lucide-react';
 import { useAllCourses } from '@/hooks/useContent';
 import { api, ApiClientError } from '@/lib/api';
 import { Badge } from '@/components/ui/Badge';
@@ -102,9 +102,9 @@ export default function ContentCoursesPage() {
           </TableRow>
         </TableHead>
         {loading ? (
-          <TableBody><TableLoading cols={6} rows={5} /></TableBody>
+          <TableLoading cols={6} rows={5} />
         ) : filtered.length === 0 ? (
-          <TableBody><TableEmpty cols={6} icon={<BookOpen size={32} />} title={search || statusFilter !== 'all' ? 'No courses match your filters' : 'No courses yet'} /></TableBody>
+          <TableEmpty cols={6} icon={<BookOpen size={32} />} title={search || statusFilter !== 'all' ? 'No courses match your filters' : 'No courses yet'} />
         ) : (
           <TableBody>
             {filtered.map(course => (
@@ -140,6 +140,11 @@ export default function ContentCoursesPage() {
                     </Button>
                     <Button variant="ghost" size="xs" asChild>
                       <Link href={`/content/courses/${course.documentId}/edit`} className="no-underline" title="Edit"><Edit3 size={14} /></Link>
+                    </Button>
+                    <Button variant="ghost" size="xs" asChild>
+                      <Link href={`/content/courses/${course.documentId}/students`} className="no-underline" title="View student progress">
+                        <Users size={14} />
+                      </Link>
                     </Button>
                     <Button variant="ghost" size="xs" className="text-rose-500 hover:bg-rose-50" onClick={() => setDeleteTarget(course)} title="Delete">
                       <Trash2 size={14} />

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Plus, Search, Edit3, Trash2, Globe, EyeOff, BookOpen, Layers } from 'lucide-react';
+import { Plus, Search, Edit3, Trash2, Globe, EyeOff, BookOpen, Layers, Users } from 'lucide-react';
 import { useAllCourses } from '@/hooks/useContent';
 import { api, ApiClientError } from '@/lib/api';
 import { Badge } from '@/components/ui/Badge';
@@ -63,7 +63,7 @@ export default function AdminCoursesPage() {
       <PageHeader
         title="All Courses"
         description={`${courses.length} total courses on the platform`}
-        action={
+        actions={
           <Button asChild leftIcon={<Plus size={15} />}>
             <Link href="/content/courses/new" className="no-underline">New Course</Link>
           </Button>
@@ -108,9 +108,9 @@ export default function AdminCoursesPage() {
           </TableRow>
         </TableHead>
         {loading ? (
-          <TableBody><TableLoading cols={6} rows={5} /></TableBody>
+          <TableLoading cols={6} rows={5} />
         ) : filtered.length === 0 ? (
-          <TableBody><TableEmpty cols={6} icon={<BookOpen size={32} />} title={search || statusFilter !== 'all' ? 'No courses match your filters' : 'No courses yet'} /></TableBody>
+          <TableEmpty cols={6} icon={<BookOpen size={32} />} title={search || statusFilter !== 'all' ? 'No courses match your filters' : 'No courses yet'} />
         ) : (
           <TableBody>
             {filtered.map((course) => (
@@ -158,6 +158,11 @@ export default function AdminCoursesPage() {
                     <Button variant="ghost" size="xs" asChild>
                       <Link href={`/content/courses/${course.documentId}/edit`} className="no-underline" title="Edit">
                         <Edit3 size={14} />
+                      </Link>
+                    </Button>
+                    <Button variant="ghost" size="xs" asChild>
+                      <Link href={`/admin/courses/${course.documentId}/students`} className="no-underline" title="View student progress">
+                        <Users size={14} />
                       </Link>
                     </Button>
                     <Button

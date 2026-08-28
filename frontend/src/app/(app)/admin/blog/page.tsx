@@ -63,7 +63,7 @@ export default function AdminBlogPage() {
       <PageHeader
         title="All Blog Posts"
         description={`${posts.length} total · ${posts.filter((p) => p.status === 'published').length} published`}
-        action={
+        actions={
           <Button asChild leftIcon={<Plus size={15} />}>
             <Link href="/content/blog/new" className="no-underline">New Post</Link>
           </Button>

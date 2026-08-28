@@ -26,10 +26,9 @@ function LoginForm() {
 
   // ─── Redirect if already authenticated ──────────────────────────────────
   React.useEffect(() => {
-    if (!isLoading && isAuthenticated) {
-      const from = sanitizeRedirect(searchParams.get('from'));
-      router.replace(from ?? defaultRouteForRole(user?.role?.type));
-    }
+    if (isLoading || !isAuthenticated || !user?.role?.type) return;
+    const from = sanitizeRedirect(searchParams.get('from'));
+    router.replace(from ?? defaultRouteForRole(user.role.type));
   }, [isLoading, isAuthenticated, user, router, searchParams]);
 
   // ─── Validation ──────────────────────────────────────────────────────────
@@ -55,7 +54,7 @@ function LoginForm() {
       if (err instanceof ApiClientError) {
         setFormError(err.status === 400 || err.status === 401
           ? 'Invalid email or password.'
-          : 'Something went wrong. Please try again.');
+          : err.message || 'Something went wrong. Please try again.');
       } else {
         setFormError('Unable to connect. Check your connection.');
       }
@@ -64,7 +63,7 @@ function LoginForm() {
     }
   };
 
-  if (isLoading || isAuthenticated) return null;
+  if (isLoading || (isAuthenticated && user?.role?.type)) return null;
 
   // ─── Render ──────────────────────────────────────────────────────────────
   return (

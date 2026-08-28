@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Plus, BookOpen, Edit3, Eye, Trash2, Users, Layers, Globe, EyeOff, Search } from 'lucide-react';
+import { Plus, BookOpen, Edit3, Trash2, Users, Layers, Globe, EyeOff, Search } from 'lucide-react';
 import { useInstructorCourses } from '@/hooks/useInstructor';
 import { api, ApiClientError } from '@/lib/api';
 import { Badge } from '@/components/ui/Badge';
@@ -128,10 +128,10 @@ export default function InstructorCoursesPage() {
                     {course.status === 'published' ? <EyeOff size={14} /> : <Globe size={14} />}
                   </Button>
                   <Button variant="ghost" size="xs" asChild>
-                    <Link href={`/instructor/courses/${course.documentId}`} className="no-underline" title="View"><Eye size={14} /></Link>
+                    <Link href={`/instructor/courses/${course.documentId}`} className="no-underline" title="Manage content"><Layers size={14} /></Link>
                   </Button>
                   <Button variant="ghost" size="xs" asChild>
-                    <Link href={`/instructor/courses/${course.documentId}/edit`} className="no-underline" title="Edit"><Edit3 size={14} /></Link>
+                    <Link href={`/instructor/courses/${course.documentId}/edit`} className="no-underline" title="Edit details"><Edit3 size={14} /></Link>
                   </Button>
                   <Button variant="ghost" size="xs" className="text-rose-500 hover:bg-rose-50" onClick={() => setDeleteTarget(course)} title="Delete">
                     <Trash2 size={14} />

@@ -47,6 +47,7 @@ async function req(method, path, body, token) {
 // Permissions each role should have — keys match Strapi 5 format: api::<name>
 const ADMIN_PERMISSIONS = {
   'api::admin-panel': { controller: 'admin-panel', actions: ['me', 'listUsers', 'getUser', 'changeRole', 'blockUser', 'unblockUser', 'deleteUser', 'getStats', 'listRoles'] },
+  'plugin::users-permissions': { controller: 'user', actions: ['me'] },
   'api::course':      { controller: 'course',      actions: ['find', 'findOne', 'create', 'update', 'delete', 'publish', 'unpublish'] },
   'api::lesson':      { controller: 'lesson',      actions: ['find', 'findOne', 'create', 'update', 'delete', 'reorder'] },
   'api::quiz':        { controller: 'quiz',        actions: ['find', 'findOne', 'create', 'update', 'delete'] },
@@ -58,6 +59,7 @@ const ADMIN_PERMISSIONS = {
 };
 
 const CONTENT_MANAGER_PERMISSIONS = {
+  'plugin::users-permissions': { controller: 'user', actions: ['me'] },
   'api::course':      { controller: 'course',      actions: ['find', 'findOne', 'create', 'update', 'delete', 'publish', 'unpublish'] },
   'api::lesson':      { controller: 'lesson',      actions: ['find', 'findOne', 'create', 'update', 'delete', 'reorder'] },
   'api::quiz':        { controller: 'quiz',        actions: ['find', 'findOne', 'create', 'update', 'delete'] },
@@ -70,6 +72,7 @@ const CONTENT_MANAGER_PERMISSIONS = {
 };
 
 const INSTRUCTOR_PERMISSIONS = {
+  'plugin::users-permissions': { controller: 'user', actions: ['me'] },
   'api::course':           { controller: 'course',          actions: ['find', 'findOne', 'create', 'update', 'delete', 'publish', 'unpublish'] },
   'api::lesson':           { controller: 'lesson',          actions: ['find', 'findOne', 'create', 'update', 'delete', 'reorder'] },
   'api::enrollment':       { controller: 'enrollment',      actions: ['find', 'findOne', 'myCourses'] },
@@ -81,6 +84,7 @@ const INSTRUCTOR_PERMISSIONS = {
 };
 
 const STUDENT_PERMISSIONS = {
+  'plugin::users-permissions': { controller: 'user', actions: ['me'] },
   'api::blog-post': { controller: 'blog-post', actions: ['find', 'findOne', 'getBySlug'] },
   'api::course':           { controller: 'course',          actions: ['find', 'findOne'] },
   'api::lesson':           { controller: 'lesson',          actions: ['find', 'findOne'] },
@@ -93,6 +97,7 @@ const STUDENT_PERMISSIONS = {
 };
 
 const AUTHENTICATED_PERMISSIONS = {
+  'plugin::users-permissions': { controller: 'user', actions: ['me'] },
   'api::blog-post': { controller: 'blog-post', actions: ['find', 'findOne', 'getBySlug'] },
   'api::course':           { controller: 'course',          actions: ['find', 'findOne'] },
   'api::lesson':           { controller: 'lesson',          actions: ['find', 'findOne'] },

@@ -137,7 +137,7 @@ export interface BlogPost {
   slug: string;
   body: string;
   status: BlogStatus;
-  coverImage?: { url: string; alternativeText?: string } | null;
+  coverImageUrl?: string | null;
   author?: { id: number; username: string } | null;
   publishedAt?: string | null;
   createdAt: string;

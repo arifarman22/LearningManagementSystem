@@ -1,86 +1,70 @@
 'use client';
 
 import * as React from 'react';
-import { Award, BookOpen, HelpCircle, BarChart2 } from 'lucide-react';
-import { api, ApiClientError } from '@/lib/api';
+import Link from 'next/link';
+import { Award, BookOpen, ChevronDown, ChevronUp, Layers } from 'lucide-react';
+import { useAllCourses } from '@/hooks/useContent';
+import { QuizEditor } from '@/components/instructor/QuizEditor';
 import { PageHeader } from '@/components/layout/AppShell';
-import { Badge } from '@/components/ui/Badge';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell, TableLoading, TableEmpty } from '@/components/ui/Table';
-import type { Quiz, ApiListResponse } from '@/types';
 
 export default function AdminQuizzesPage() {
-  const [quizzes, setQuizzes] = React.useState<Quiz[]>([]);
-  const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState<string | null>(null);
-
-  React.useEffect(() => {
-    api.get<ApiListResponse<Quiz>>(
-      '/quizzes?populate[course]=true&populate[questions][populate][options]=true&pagination[pageSize]=100',
-    )
-      .then((r) => setQuizzes(r.data ?? []))
-      .catch((e) => setError(e instanceof ApiClientError ? e.message : 'Failed to load quizzes'))
-      .finally(() => setLoading(false));
-  }, []);
+  const { courses, loading, error } = useAllCourses();
+  const [expanded, setExpanded] = React.useState<string | null>(null);
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Quizzes"
-        description={`${quizzes.length} quizzes across all courses`}
+        description="Create and manage quizzes for any course"
       />
 
       {error && (
         <div className="rounded-xl bg-rose-50 border border-rose-200 px-4 py-3 text-sm text-rose-700">{error}</div>
       )}
 
-      <div className="rounded-2xl border border-neutral-200/60 bg-white overflow-hidden">
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableHeaderCell>Quiz</TableHeaderCell>
-              <TableHeaderCell>Course</TableHeaderCell>
-              <TableHeaderCell>Questions</TableHeaderCell>
-              <TableHeaderCell>Created</TableHeaderCell>
-            </TableRow>
-          </TableHead>
-          {loading ? (
-            <TableBody><TableLoading cols={4} rows={5} /></TableBody>
-          ) : quizzes.length === 0 ? (
-            <TableBody><TableEmpty cols={4} icon={<Award size={32} />} title="No quizzes yet" /></TableBody>
-          ) : (
-            <TableBody>
-              {quizzes.map((quiz) => (
-                <TableRow key={quiz.documentId}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-600">
-                        <Award size={15} />
-                      </div>
-                      <p className="font-medium text-neutral-900">{quiz.title}</p>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1.5 text-sm text-neutral-600">
-                      <BookOpen size={13} className="text-neutral-400" />
-                      {quiz.course?.title ?? <span className="text-neutral-300 italic">No course</span>}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1.5 text-sm text-neutral-600">
-                      <HelpCircle size={13} className="text-neutral-400" />
-                      {quiz.questions?.length ?? 0} questions
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-xs text-neutral-500">
-                    {new Date(quiz.createdAt).toLocaleDateString()}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          )}
-        </Table>
-      </div>
+      {loading ? (
+        <div className="space-y-3">
+          {[0, 1, 2].map((i) => <Skeleton key={i} className="h-16 rounded-2xl" />)}
+        </div>
+      ) : courses.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-neutral-300 bg-neutral-50 p-12 text-center">
+          <BookOpen size={32} className="mx-auto text-neutral-300 mb-3" />
+          <p className="text-sm font-medium text-neutral-600">No courses yet</p>
+          <Link href="/content/courses/new" className="text-xs text-violet-600 hover:underline mt-1 inline-block">Create a course first</Link>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {courses.map((course) => {
+            const isOpen = expanded === course.documentId;
+            return (
+              <div key={course.documentId} className="rounded-2xl border border-neutral-200/60 bg-white overflow-hidden">
+                <button
+                  onClick={() => setExpanded(isOpen ? null : course.documentId)}
+                  className="flex w-full items-center gap-4 px-5 py-4 text-left hover:bg-neutral-50 transition-colors"
+                >
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
+                    <Award size={16} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-neutral-900 truncate">{course.title}</p>
+                    <p className="text-xs text-neutral-400 flex items-center gap-1 mt-0.5">
+                      <Layers size={11} /> {course.lessons?.length ?? 0} lessons
+                    </p>
+                  </div>
+                  {isOpen ? <ChevronUp size={16} className="text-neutral-400 shrink-0" /> : <ChevronDown size={16} className="text-neutral-400 shrink-0" />}
+                </button>
+
+                {isOpen && (
+                  <div className="border-t border-neutral-100 px-5 py-5">
+                    <QuizEditor courseDocumentId={course.documentId} />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

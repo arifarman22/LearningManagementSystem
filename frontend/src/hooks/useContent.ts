@@ -64,7 +64,7 @@ export function useAllBlogPosts() {
     setLoading(true); setError(null);
     try {
       const res = await api.get<ApiListResponse<BlogPost>>(
-        '/blog-posts?populate[author]=true&populate[coverImage]=true&sort=createdAt:desc&pagination[pageSize]=100',
+        '/blog-posts?populate[author]=true&sort=createdAt:desc&pagination[pageSize]=100',
       );
       setPosts(res.data ?? []);
     } catch (e) {

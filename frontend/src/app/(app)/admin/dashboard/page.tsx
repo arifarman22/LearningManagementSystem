@@ -105,10 +105,11 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { title: 'User Management', desc: 'Manage users & assign roles', href: '/admin/users',   icon: <Users size={20} />,    color: 'blue'   as const },
           { title: 'All Courses',     desc: 'View and manage all courses', href: '/admin/courses', icon: <BookOpen size={20} />, color: 'emerald' as const },
+          { title: 'Quizzes',         desc: 'Create & manage quizzes',     href: '/admin/quizzes', icon: <Award size={20} />,    color: 'purple' as const },
           { title: 'Blog Posts',      desc: 'Write and publish articles',  href: '/admin/blog',    icon: <FileText size={20} />, color: 'amber'  as const },
         ].map((item, i) => (
           <Link key={i} href={item.href} className="block no-underline group">

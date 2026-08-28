@@ -4,7 +4,22 @@ import { getAuthUser, isRole, requireCourseOwnership } from '../../../middleware
 export default factories.createCoreController('api::course.course' as any, ({ strapi }) => ({
 
   async find(ctx) {
-    const user = ctx.state?.user;
+    let user = ctx.state?.user;
+    if (!user) {
+      const authHeader = ctx.request.headers?.authorization as string | undefined;
+      const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
+      if (token) {
+        try {
+          const decoded = await (strapi.service('plugin::users-permissions.jwt') as any).verify(token);
+          if (decoded?.id) {
+            user = await strapi.db.query('plugin::users-permissions.user').findOne({
+              where: { id: decoded.id },
+              populate: ['role'],
+            });
+          }
+        } catch { user = null; }
+      }
+    }
     const populate = ['instructor', 'lessons'];
 
     if (!user || isRole(user, 'student')) {
@@ -29,7 +44,22 @@ export default factories.createCoreController('api::course.course' as any, ({ st
   },
 
   async findOne(ctx) {
-    const user = ctx.state?.user;
+    let user = ctx.state?.user;
+    if (!user) {
+      const authHeader = ctx.request.headers?.authorization as string | undefined;
+      const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
+      if (token) {
+        try {
+          const decoded = await (strapi.service('plugin::users-permissions.jwt') as any).verify(token);
+          if (decoded?.id) {
+            user = await strapi.db.query('plugin::users-permissions.user').findOne({
+              where: { id: decoded.id },
+              populate: ['role'],
+            });
+          }
+        } catch { user = null; }
+      }
+    }
     const course = await strapi.db.query('api::course.course').findOne({
       where: { documentId: ctx.params.id },
       populate: ['instructor', 'lessons'],

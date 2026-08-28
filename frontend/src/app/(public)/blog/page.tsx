@@ -32,7 +32,6 @@ export default function BlogPage() {
     const params = new URLSearchParams({
       'filters[status]': 'published',
       'populate[author]': 'true',
-      'populate[coverImage]': 'true',
       'pagination[page]': String(page),
       'pagination[pageSize]': String(PAGE_SIZE),
       'sort': 'publishedAt:desc',

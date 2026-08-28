@@ -3,7 +3,6 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/store/auth';
-import { Skeleton } from '@/components/ui/Skeleton';
 
 export default function InstructorLayout({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
@@ -15,15 +14,6 @@ export default function InstructorLayout({ children }: { children: React.ReactNo
       router.replace('/dashboard');
     }
   }, [isLoading, role, router]);
-
-  if (isLoading) {
-    return (
-      <div className="space-y-4 p-6">
-        <Skeleton className="h-8 w-48 rounded-lg" />
-        <Skeleton className="h-4 w-64 rounded" />
-      </div>
-    );
-  }
 
   if (!isLoading && role && role !== 'instructor' && role !== 'admin' && role !== 'content-manager') {
     return null;

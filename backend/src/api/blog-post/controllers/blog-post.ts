@@ -83,7 +83,7 @@ export default factories.createCoreController('api::blog-post.blog-post' as any,
     }
 
     // Force author to the authenticated user; ignore any client-supplied author
-    data.author = user.id;
+    data.author = { connect: [{ id: user.id }] };
     (ctx.request.body as any).data = data;
 
     if (data.status === 'published' && !data.publishedAt) {

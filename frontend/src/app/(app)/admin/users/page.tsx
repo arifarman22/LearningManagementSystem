@@ -98,7 +98,7 @@ export default function AdminUsersPage() {
       <PageHeader
         title="User Management"
         description={`${users.length} users on the platform`}
-        action={
+        actions={
           <Button variant="secondary" size="sm" onClick={load} leftIcon={<RefreshCw size={14} />}>
             Refresh
           </Button>
@@ -135,13 +135,13 @@ export default function AdminUsersPage() {
               <TableHeaderCell>Actions</TableHeaderCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {loading ? (
-              <TableLoading cols={5} rows={6} />
-            ) : filtered.length === 0 ? (
-              <TableEmpty cols={5} title="No users found." />
-            ) : (
-              filtered.map((u) => {
+          {loading ? (
+            <TableLoading cols={5} rows={6} />
+          ) : filtered.length === 0 ? (
+            <TableEmpty cols={5} title="No users found." />
+          ) : (
+            <TableBody>
+              {filtered.map((u) => {
                 const isSelf = u.id === me?.id;
                 const busy = actionLoading === u.id;
                 return (

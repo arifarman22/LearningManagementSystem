@@ -17,7 +17,7 @@ async function getPost(slug: string): Promise<BlogPost | null> {
   try {
     // Try by slug
     const res = await api.get<ApiListResponse<BlogPost>>(
-      `/blog-posts/slug/${encodeURIComponent(slug)}?populate[author]=true&populate[coverImage]=true`,
+      `/blog-posts/slug/${encodeURIComponent(slug)}?populate[author]=true`,
       { token: null },
     );
     // getBySlug returns a single object wrapped in data
@@ -29,7 +29,7 @@ async function getPost(slug: string): Promise<BlogPost | null> {
 
   try {
     const res = await api.get<ApiListResponse<BlogPost>>(
-      `/blog-posts?filters[slug][$eq]=${encodeURIComponent(slug)}&filters[status]=published&populate[author]=true&populate[coverImage]=true`,
+      `/blog-posts?filters[slug][$eq]=${encodeURIComponent(slug)}&filters[status]=published&populate[author]=true`,
       { token: null },
     );
     return res.data?.[0] ?? null;
@@ -59,7 +59,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
 
   if (!post || post.status !== 'published') notFound();
 
-  const cover = resolveUrl(post.coverImage?.url);
+  const cover = resolveUrl(post.coverImageUrl);
   const date = post.publishedAt
     ? new Date(post.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
     : null;
@@ -80,7 +80,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
         <div className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-8 bg-neutral-100">
           <Image
             src={cover}
-            alt={post.coverImage?.alternativeText ?? post.title}
+            alt={post.title}
             fill
             className="object-cover"
             priority

@@ -77,11 +77,11 @@ TableCell.displayName = 'TableCell';
 
 // ── Loading state ─────────────────────────────────────────────────────────────
 export const TableLoading = ({ cols = 4, rows = 5 }: { cols?: number; rows?: number }) => (
-  <>
+  <tbody>
     {Array.from({ length: rows }).map((_, i) => (
       <SkeletonTableRow key={i} cols={cols} />
     ))}
-  </>
+  </tbody>
 );
 
 // ── Empty state ───────────────────────────────────────────────────────────────
@@ -96,11 +96,13 @@ export const TableEmpty = ({
   title: string;
   description?: string;
 }) => (
-  <tr>
-    <td colSpan={cols} className="px-4 py-16 text-center">
-      {icon && <div className="flex justify-center mb-3 text-neutral-300">{icon}</div>}
-      <p className="text-sm font-medium text-neutral-500">{title}</p>
-      {description && <p className="text-xs text-neutral-400 mt-1">{description}</p>}
-    </td>
-  </tr>
+  <tbody>
+    <tr>
+      <td colSpan={cols} className="px-4 py-16 text-center">
+        {icon && <div className="flex justify-center mb-3 text-neutral-300">{icon}</div>}
+        <p className="text-sm font-medium text-neutral-500">{title}</p>
+        {description && <p className="text-xs text-neutral-400 mt-1">{description}</p>}
+      </td>
+    </tr>
+  </tbody>
 );
