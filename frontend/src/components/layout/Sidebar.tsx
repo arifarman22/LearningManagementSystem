@@ -25,19 +25,19 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { label: 'Dashboard', href: '/admin/dashboard',   icon: <LayoutDashboard size={18} />, roles: ['admin'] },
   { label: 'Dashboard', href: '/instructor',         icon: <LayoutDashboard size={18} />, roles: ['instructor'], exact: true },
-  { label: 'Dashboard', href: '/content',            icon: <LayoutDashboard size={18} />, roles: ['content-manager'] },
+  { label: 'Dashboard', href: '/content',            icon: <LayoutDashboard size={18} />, roles: ['content-manager'], exact: true },
   { label: 'Dashboard', href: '/student/dashboard',  icon: <LayoutDashboard size={18} />, roles: ['student', 'authenticated'] },
   { label: 'Admin',       href: '/admin/users',         icon: <Shield size={18} />,         roles: ['admin'] },
   { label: 'My Learning', href: '/my-learning',         icon: <GraduationCap size={18} />,  roles: ['student', 'authenticated'] },
   { label: 'My Courses',  href: '/instructor/courses',  icon: <BookOpen size={18} />,       roles: ['instructor'] },
-  { label: 'Content',     href: '/content',             icon: <FileText size={18} />,       roles: ['content-manager', 'admin'] },
+  { label: 'Content',     href: '/content',             icon: <FileText size={18} />,       roles: ['admin'] },
   { label: 'Courses',     href: '/content/courses',     icon: <BookOpen size={18} />,       roles: ['content-manager'] },
   { label: 'Blog',        href: '/content/blog',        icon: <FileText size={18} />,       roles: ['content-manager'] },
   { label: 'Courses',     href: '/courses',             icon: <BookOpen size={18} />,       roles: ['student', 'authenticated'] },
   { label: 'All Courses', href: '/admin/courses',        icon: <BookOpen size={18} />,       roles: ['admin'] },
   { label: 'Blog Posts',  href: '/admin/blog',           icon: <FileText size={18} />,       roles: ['admin'] },
   { label: 'Quizzes',     href: '/admin/quizzes',        icon: <Award size={18} />,          roles: ['admin'] },
-  { label: 'Blog',        href: '/blog',                icon: <FileText size={18} /> },
+  { label: 'Blog',        href: '/blog',                icon: <FileText size={18} />,       roles: ['student', 'authenticated', 'admin'] },
 ];
 
 // ── Sidebar context ───────────────────────────────────────────────────────────

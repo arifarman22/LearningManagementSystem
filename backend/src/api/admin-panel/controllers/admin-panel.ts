@@ -113,6 +113,7 @@ export default ({ strapi }: { strapi: any }) => ({
     });
     if (!full) return ctx.notFound();
     const { password, resetPasswordToken, confirmationToken, ...safe } = full;
+    if (safe.role?.type) safe.role.type = safe.role.type.replace(/_/g, '-');
     ctx.body = safe;
   },
 });
