@@ -10,12 +10,12 @@ export default function InstructorLayout({ children }: { children: React.ReactNo
   const role = user?.role?.type;
 
   React.useEffect(() => {
-    if (!isLoading && role && role !== 'instructor' && role !== 'admin' && role !== 'content-manager') {
+    if (!isLoading && role && role !== 'instructor') {
       router.replace('/dashboard');
     }
   }, [isLoading, role, router]);
 
-  if (!isLoading && role && role !== 'instructor' && role !== 'admin' && role !== 'content-manager') {
+  if (!isLoading && role && role !== 'instructor') {
     return null;
   }
 

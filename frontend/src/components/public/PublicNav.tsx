@@ -32,7 +32,7 @@ export function PublicNav() {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600">
             <BookMarked size={16} className="text-white" />
           </div>
-          <span className="text-base font-bold text-neutral-900">LearnHub</span>
+          <span className="text-base font-bold text-neutral-900">LMS</span>
         </Link>
 
         {/* Desktop nav */}
@@ -137,7 +137,7 @@ export function PublicFooter() {
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600">
                 <BookMarked size={16} className="text-white" />
               </div>
-              <span className="text-base font-bold text-neutral-900">LearnHub</span>
+              <span className="text-base font-bold text-neutral-900">LMS</span>
             </Link>
             <p className="text-sm text-neutral-500 leading-relaxed">
               A modern learning platform built for curious minds.
@@ -188,7 +188,7 @@ export function PublicFooter() {
         </div>
 
         <div className="mt-10 border-t border-neutral-100 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-neutral-400">© {new Date().getFullYear()} LearnHub. All rights reserved.</p>
+          <p className="text-xs text-neutral-400">© {new Date().getFullYear()} LMS. All rights reserved.</p>
           <p className="text-xs text-neutral-400">Built with Next.js &amp; Strapi</p>
         </div>
       </div>

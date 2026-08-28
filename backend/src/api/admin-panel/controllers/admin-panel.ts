@@ -104,6 +104,18 @@ export default ({ strapi }: { strapi: any }) => ({
     ctx.body = { data: roles };
   },
 
+  async getPublicStats(ctx: any) {
+    const [enrollments, courses, instructorRole] = await Promise.all([
+      strapi.db.query('api::enrollment.enrollment').count({}),
+      strapi.db.query('api::course.course').count({ where: { status: 'published' } }),
+      strapi.db.query('plugin::users-permissions.role').findOne({ where: { type: 'instructor' } }),
+    ]);
+    const instructors = instructorRole
+      ? await strapi.db.query('plugin::users-permissions.user').count({ where: { role: instructorRole.id } })
+      : 0;
+    ctx.body = { data: { enrollments, courses, instructors } };
+  },
+
   async me(ctx: any) {
     const user = ctx.state?.user;
     if (!user) return ctx.unauthorized();

@@ -5,11 +5,34 @@ export default factories.createCoreController('api::enrollment.enrollment' as an
 
   async find(ctx) {
     const user = getAuthUser(ctx);
+
     if (isRole(user, 'student')) {
-      ctx.query = { ...ctx.query, filters: { ...((ctx.query as any).filters ?? {}), student: user.id } };
-    } else if (isRole(user, 'instructor')) {
-      ctx.query = { ...ctx.query, filters: { ...((ctx.query as any).filters ?? {}), course: { instructor: user.id } } };
+      const enrollments = await strapi.db.query('api::enrollment.enrollment').findMany({
+        where: { student: user.id },
+        populate: ['student', 'course', 'course.instructor', 'course.lessons', 'course.thumbnail'],
+        orderBy: { createdAt: 'desc' },
+        limit: 100,
+      });
+      return ctx.send({ data: enrollments });
     }
+
+    if (isRole(user, 'instructor')) {
+      const courses = await strapi.db.query('api::course.course').findMany({
+        where: { instructor: user.id },
+        select: ['id'],
+      });
+      const courseIds = courses.map((c: any) => c.id);
+      if (courseIds.length === 0) return ctx.send({ data: [] });
+      const enrollments = await strapi.db.query('api::enrollment.enrollment').findMany({
+        where: { course: { $in: courseIds } },
+        populate: ['student', 'course'],
+        orderBy: { createdAt: 'desc' },
+        limit: 100,
+      });
+      return ctx.send({ data: enrollments });
+    }
+
+    // admin / content-manager — unfiltered
     return super.find(ctx);
   },
 

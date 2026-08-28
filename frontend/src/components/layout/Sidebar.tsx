@@ -31,8 +31,8 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'My Learning', href: '/my-learning',         icon: <GraduationCap size={18} />,  roles: ['student', 'authenticated'] },
   { label: 'My Courses',  href: '/instructor/courses',  icon: <BookOpen size={18} />,       roles: ['instructor'] },
   { label: 'Content',     href: '/content',             icon: <FileText size={18} />,       roles: ['admin'] },
-  { label: 'Courses',     href: '/content/courses',     icon: <BookOpen size={18} />,       roles: ['content-manager'] },
-  { label: 'Blog',        href: '/content/blog',        icon: <FileText size={18} />,       roles: ['content-manager'] },
+  { label: 'Courses',     href: '/content/courses',     icon: <BookOpen size={18} />,       roles: ['content-manager'], exact: true },
+  { label: 'Blog',        href: '/content/blog',        icon: <FileText size={18} />,       roles: ['content-manager'], exact: true },
   { label: 'Courses',     href: '/courses',             icon: <BookOpen size={18} />,       roles: ['student', 'authenticated'] },
   { label: 'All Courses', href: '/admin/courses',        icon: <BookOpen size={18} />,       roles: ['admin'] },
   { label: 'Blog Posts',  href: '/admin/blog',           icon: <FileText size={18} />,       roles: ['admin'] },
@@ -93,7 +93,7 @@ export function Sidebar() {
         </div>
         {!collapsed && (
           <span className="text-base font-bold text-neutral-900 tracking-tight">
-            LearnHub
+            LMS
           </span>
         )}
       </div>

@@ -23,9 +23,11 @@ const NAV_ITEMS = [
   { label: 'Admin',       href: '/admin/users',         icon: <Shield size={18} />,         roles: ['admin'] },
   { label: 'My Learning', href: '/my-learning',         icon: <GraduationCap size={18} />,  roles: ['student', 'authenticated'] },
   { label: 'My Courses',  href: '/instructor/courses',  icon: <BookOpen size={18} />,       roles: ['instructor'] },
-  { label: 'Content',     href: '/content',             icon: <FileText size={18} />,       roles: ['content-manager', 'admin'] },
-  { label: 'Courses',     href: '/courses',             icon: <BookOpen size={18} />,       roles: ['student', 'authenticated', 'admin', 'content-manager'] },
-  { label: 'Blog',        href: '/blog',                icon: <FileText size={18} />,       roles: [] },
+  { label: 'Content',     href: '/content',             icon: <FileText size={18} />,       roles: ['admin'] },
+  { label: 'Courses',     href: '/content/courses',     icon: <BookOpen size={18} />,       roles: ['content-manager'] },
+  { label: 'Blog',        href: '/content/blog',        icon: <FileText size={18} />,       roles: ['content-manager'] },
+  { label: 'Courses',     href: '/courses',             icon: <BookOpen size={18} />,       roles: ['student', 'authenticated', 'admin'] },
+  { label: 'Blog',        href: '/blog',                icon: <FileText size={18} />,       roles: ['student', 'authenticated', 'admin'] },
 ];
 
 export function MobileNav({ open, onClose }: MobileNavProps) {
@@ -34,11 +36,11 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
   const role = user?.role?.type ?? '';
 
   const visibleItems = NAV_ITEMS.filter(
-    (item) => item.roles.length === 0 || item.roles.includes(role),
+    (item) => item.roles.includes(role),
   );
 
   // Close on route change
-  React.useEffect(() => { onClose(); }, [pathname, onClose]);
+  React.useEffect(() => { onClose(); }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!open) return null;
 
@@ -67,7 +69,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600">
               <BookMarked size={16} className="text-white" />
             </div>
-            <span className="text-base font-bold text-neutral-900">LearnHub</span>
+            <span className="text-base font-bold text-neutral-900">LMS</span>
           </div>
           <button
             onClick={onClose}

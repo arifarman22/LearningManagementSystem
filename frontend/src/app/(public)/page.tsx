@@ -37,6 +37,18 @@ async function getRecentPosts(): Promise<BlogPost[]> {
   }
 }
 
+async function getPublicStats() {
+  try {
+    const res = await api.get<{ data: { enrollments: number; courses: number; instructors: number } }>(
+      '/admin-panel/public-stats',
+      { token: null },
+    );
+    return res.data;
+  } catch {
+    return { enrollments: 0, courses: 0, instructors: 0 };
+  }
+}
+
 // ── Feature Card
 function FeatureCard({ icon, title, desc, color = 'brand', index = 0 }: { 
   icon: React.ReactNode; 
@@ -123,7 +135,7 @@ function BenefitItem({ text, icon }: { text: string; icon?: React.ReactNode }) {
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default async function LandingPage() {
-  const [courses, posts] = await Promise.all([getFeaturedCourses(), getRecentPosts()]);
+  const [courses, posts, stats] = await Promise.all([getFeaturedCourses(), getRecentPosts(), getPublicStats()]);
 
   return (
     <div className="overflow-x-hidden">
@@ -280,9 +292,9 @@ export default async function LandingPage() {
       <section className="bg-violet-700">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
-            <AnimatedCounter value={10000} label="Active learners" suffix="+" />
-            <AnimatedCounter value={200} label="Expert courses" suffix="+" />
-            <AnimatedCounter value={50} label="Instructors" suffix="+" />
+            <AnimatedCounter value={stats.enrollments} label="Active learners" suffix="+" />
+            <AnimatedCounter value={stats.courses} label="Expert courses" suffix="+" />
+            <AnimatedCounter value={stats.instructors} label="Instructors" suffix="+" />
             <AnimatedCounter value={95} label="Completion rate" suffix="%" />
           </div>
         </div>
@@ -294,7 +306,7 @@ export default async function LandingPage() {
           <div className="text-center max-w-2xl mx-auto mb-14">
             <div className="inline-flex items-center gap-2 rounded-full bg-violet-50 dark:bg-violet-950/30 px-4 py-1.5 mb-4">
               <Sparkles size={14} className="text-violet-600 dark:text-violet-400" />
-              <span className="text-xs font-medium text-violet-600 dark:text-violet-400 uppercase tracking-wider">Why LearnHub</span>
+              <span className="text-xs font-medium text-violet-600 dark:text-violet-400 uppercase tracking-wider">Why LMS</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-white">
               Everything you need to succeed
@@ -561,7 +573,7 @@ export default async function LandingPage() {
                 </div>
                 <h3 className="text-2xl font-bold mb-3">Ready to start learning?</h3>
                 <p className="text-violet-200 mb-8 leading-relaxed">
-                  Join thousands of learners already building their future on LearnHub. Create your free account in under a minute.
+                  Join thousands of learners already building their future on LMS. Create your free account in under a minute.
                 </p>
                 <div className="space-y-3">
                   <Button size="lg" fullWidth asChild className="bg-white text-violet-700 hover:bg-violet-50 shadow-lg group">
@@ -664,7 +676,7 @@ export default async function LandingPage() {
             Your next skill is one click away
           </h2>
           <p className="text-violet-300 mb-8 leading-relaxed animate-slide-up" style={{ animationDelay: '0.05s' }}>
-            Stop putting it off. Start learning today with LearnHub's expert-led courses.
+            Stop putting it off. Start learning today with LMS's expert-led courses.
           </p>
           <Button size="xl" asChild className="bg-white text-violet-700 hover:bg-violet-50 shadow-lg shadow-violet-500/25 group animate-slide-up" style={{ animationDelay: '0.1s' }}>
             <Link href="/register" className="no-underline flex items-center gap-2">

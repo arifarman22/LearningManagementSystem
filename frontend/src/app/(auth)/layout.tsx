@@ -8,7 +8,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600">
           <BookMarked size={16} className="text-white" />
         </div>
-        <span className="text-base font-bold text-neutral-900">LearnHub</span>
+        <span className="text-base font-bold text-neutral-900">LMS</span>
       </header>
 
       <main className="flex flex-1 items-center justify-center px-4 py-12">
@@ -16,7 +16,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       </main>
 
       <footer className="py-4 text-center text-xs text-neutral-400">
-        © {new Date().getFullYear()} LearnHub. All rights reserved.
+        © {new Date().getFullYear()} LMS. All rights reserved.
       </footer>
     </div>
   );

@@ -10,6 +10,8 @@ import { MobileNav } from './MobileNav';
 function ShellInner({ children }: { children: React.ReactNode }) {
   const { collapsed } = useSidebar();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const handleClose = React.useCallback(() => setMobileOpen(false), []);
+  const handleToggle = React.useCallback(() => setMobileOpen((v) => !v), []);
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -19,12 +21,12 @@ function ShellInner({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Mobile nav */}
-      <MobileNav open={mobileOpen} onClose={() => setMobileOpen(false)} />
+      <MobileNav open={mobileOpen} onClose={handleClose} />
 
       {/* Top nav */}
       <TopNav
         mobileMenuOpen={mobileOpen}
-        onMobileMenuToggle={() => setMobileOpen((v) => !v)}
+        onMobileMenuToggle={handleToggle}
       />
 
       {/* Main content */}

@@ -5,11 +5,32 @@ export default factories.createCoreController('api::lesson-progress.lesson-progr
 
   async find(ctx) {
     const user = getAuthUser(ctx);
+
     if (isRole(user, 'student')) {
-      ctx.query = { ...ctx.query, filters: { ...((ctx.query as any).filters ?? {}), student: user.id } };
-    } else if (isRole(user, 'instructor')) {
-      ctx.query = { ...ctx.query, filters: { ...((ctx.query as any).filters ?? {}), course: { instructor: user.id } } };
+      const records = await strapi.db.query('api::lesson-progress.lesson-progress').findMany({
+        where: { student: user.id },
+        populate: ['lesson', 'course'],
+        limit: 500,
+      });
+      return ctx.send({ data: records });
     }
+
+    if (isRole(user, 'instructor')) {
+      const courses = await strapi.db.query('api::course.course').findMany({
+        where: { instructor: user.id },
+        select: ['id'],
+      });
+      const courseIds = courses.map((c: any) => c.id);
+      if (courseIds.length === 0) return ctx.send({ data: [] });
+      const records = await strapi.db.query('api::lesson-progress.lesson-progress').findMany({
+        where: { course: { $in: courseIds } },
+        populate: ['lesson', 'course', 'student'],
+        limit: 500,
+      });
+      return ctx.send({ data: records });
+    }
+
+    // admin / content-manager
     return super.find(ctx);
   },
 

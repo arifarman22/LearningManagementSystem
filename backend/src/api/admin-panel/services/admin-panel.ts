@@ -12,7 +12,7 @@ export default ({ strapi }: { strapi: any }) => ({
       email: u.email,
       confirmed: u.confirmed,
       blocked: u.blocked,
-      role: u.role ? { id: u.role.id, name: u.role.name, type: u.role.type } : null,
+      role: u.role ? { id: u.role.id, name: u.role.name, type: u.role.type?.replace(/_/g, '-') } : null,
       createdAt: u.createdAt,
     }));
   },
@@ -30,7 +30,7 @@ export default ({ strapi }: { strapi: any }) => ({
       email: user.email,
       confirmed: user.confirmed,
       blocked: user.blocked,
-      role: user.role ? { id: user.role.id, name: user.role.name, type: user.role.type } : null,
+      role: user.role ? { id: user.role.id, name: user.role.name, type: user.role.type?.replace(/_/g, '-') } : null,
       createdAt: user.createdAt,
     };
   },

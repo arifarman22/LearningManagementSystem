@@ -220,9 +220,9 @@ export default function AdminUsersPage() {
                     </TableCell>
                   </TableRow>
                 );
-              })
-            )}
-          </TableBody>
+              })}
+            </TableBody>
+          )}
         </Table>
       </div>
 

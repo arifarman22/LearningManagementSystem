@@ -1,15 +1,12 @@
 import type { Metadata, Viewport } from 'next';
 import { Toaster } from 'sonner';
 import { AuthProvider } from '@/store/auth';
-// TypeScript may not resolve CSS side-effect imports when the generated Next.js
-// declarations are unavailable during standalone type-checking.
-// @ts-expect-error CSS is processed by Next.js at build time.
 import './globals.css';
 
 export const metadata: Metadata = {
   title: {
-    default: 'LearnHub',
-    template: '%s | LearnHub',
+    default: 'LMS',
+    template: '%s | LMS',
   },
   description: 'A modern learning management system',
   icons: { icon: '/favicon.ico' },

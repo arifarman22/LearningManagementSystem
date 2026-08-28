@@ -59,7 +59,7 @@ export default factories.createCoreController('api::blog-post.blog-post' as any,
     const user = ctx.state?.user;
     const post = await strapi.db.query('api::blog-post.blog-post').findOne({
       where: { slug: ctx.params.slug },
-      populate: ['author', 'coverImage'],
+      populate: ['author'],
     });
     if (!post) return ctx.notFound('Blog post not found');
     if (post.status !== 'published' && !canSeeDrafts(user)) {

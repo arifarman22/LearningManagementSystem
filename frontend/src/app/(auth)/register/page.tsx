@@ -194,7 +194,7 @@ function RegisterForm() {
           Create an account
         </h1>
         <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
-          Join LearnHub and start your learning journey today
+          Join LMS and start your learning journey today
         </p>
       </div>
 

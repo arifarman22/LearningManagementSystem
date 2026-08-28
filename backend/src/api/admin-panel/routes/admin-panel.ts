@@ -1,6 +1,7 @@
 export default {
   routes: [
-    { method: 'GET',   path: '/admin-panel/me',                 handler: 'admin-panel.me',         config: {} },
+    { method: 'GET',   path: '/admin-panel/me',                 handler: 'admin-panel.me',              config: {} },
+    { method: 'GET',   path: '/admin-panel/public-stats',        handler: 'admin-panel.getPublicStats',  config: { auth: false } },
     { method: 'GET',   path: '/admin-panel/users',              handler: 'admin-panel.listUsers',  config: {} },
     { method: 'GET',   path: '/admin-panel/stats',              handler: 'admin-panel.getStats',   config: {} },
     { method: 'GET',   path: '/admin-panel/roles',              handler: 'admin-panel.listRoles',  config: {} },
