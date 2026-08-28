@@ -4,10 +4,10 @@ import { cn } from '@/lib/cn';
 import { Loader2 } from 'lucide-react';
 
 const variants = {
-  primary:        'bg-brand-600 text-white hover:bg-brand-700 hover:text-white active:bg-brand-800 shadow-xs',
-  secondary:      'bg-white text-neutral-700 border border-neutral-300 hover:bg-neutral-50 hover:text-neutral-700 active:bg-neutral-100 shadow-xs',
-  ghost:          'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-600 active:bg-neutral-200',
-  danger:         'bg-danger-600 text-white hover:bg-danger-700 hover:text-white active:bg-danger-800 shadow-xs',
+  primary:        'bg-brand-600 text-white hover:bg-brand-700 hover:text-white active:bg-brand-800 shadow-sm',
+  secondary:      'bg-white text-neutral-700 border border-neutral-200 hover:bg-neutral-50 hover:text-neutral-700 active:bg-neutral-100 shadow-sm',
+  ghost:          'text-neutral-500 hover:bg-neutral-100 hover:text-neutral-700 active:bg-neutral-200',
+  danger:         'bg-danger-600 text-white hover:bg-danger-700 hover:text-white active:bg-danger-800 shadow-sm',
   'danger-ghost': 'text-danger-600 hover:bg-danger-50 hover:text-danger-600 active:bg-danger-100',
   link:           'text-brand-600 underline-offset-4 hover:underline hover:text-brand-600 p-0 h-auto',
 } as const;

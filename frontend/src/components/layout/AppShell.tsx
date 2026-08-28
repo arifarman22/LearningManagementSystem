@@ -32,12 +32,12 @@ function ShellInner({ children }: { children: React.ReactNode }) {
       {/* Main content */}
       <main
         className={cn(
-          'pt-[3.75rem] min-h-screen transition-all duration-250 ease-smooth',
+          'pt-[3.75rem] min-h-screen transition-all duration-200',
           'md:pl-64',
           collapsed && 'md:pl-[4.5rem]',
         )}
       >
-        <div className="p-6 max-w-screen-2xl mx-auto">
+        <div className="p-6 max-w-screen-xl mx-auto">
           {children}
         </div>
       </main>

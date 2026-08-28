@@ -12,10 +12,10 @@ const sizes = {
 
 const colors = [
   'bg-brand-100 text-brand-700',
-  'bg-success-100 text-success-700',
-  'bg-warning-100 text-warning-700',
-  'bg-info-100 text-info-700',
-  'bg-neutral-200 text-neutral-700',
+  'bg-emerald-100 text-emerald-700',
+  'bg-amber-100 text-amber-700',
+  'bg-blue-100 text-blue-700',
+  'bg-purple-100 text-purple-700',
 ] as const;
 
 function getInitials(name: string): string {

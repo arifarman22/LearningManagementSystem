@@ -10,19 +10,29 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Brand
+        // Brand — vibrant cyan-blue (Programming Hero style)
         brand: {
-          50:  '#f0f4ff',
-          100: '#e0eaff',
-          200: '#c7d7fe',
-          300: '#a5bbfc',
-          400: '#8098f9',
-          500: '#6172f3',
-          600: '#4a52e8',
-          700: '#3d40d0',
-          800: '#3235a8',
-          900: '#2e3285',
-          950: '#1c1e50',
+          50:  '#ecfeff',
+          100: '#cffafe',
+          200: '#a5f3fc',
+          300: '#67e8f9',
+          400: '#22d3ee',
+          500: '#06b6d4',
+          600: '#0891b2',
+          700: '#0e7490',
+          800: '#155e75',
+          900: '#164e63',
+          950: '#083344',
+        },
+        // Sidebar — deep navy
+        sidebar: {
+          bg:      '#0f172a',
+          hover:   '#1e293b',
+          active:  '#1e3a5f',
+          border:  '#1e293b',
+          text:    '#94a3b8',
+          'text-active': '#e2e8f0',
+          'text-muted':  '#475569',
         },
         // Neutral (slate-based)
         neutral: {
@@ -70,7 +80,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
       fontSize: {
@@ -143,8 +153,8 @@ const config: Config = {
           to:   { transform: 'translateX(0)' },
         },
         shimmer: {
-          '0%':   { backgroundPosition: '-200% 0' },
-          '100%': { backgroundPosition: '200% 0' },
+          '0%':   { backgroundPosition: '300% 0' },
+          '100%': { backgroundPosition: '-300% 0' },
         },
         'spin-slow': {
           from: { transform: 'rotate(0deg)' },
