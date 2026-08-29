@@ -24,20 +24,18 @@ interface LessonWithProgress extends Lesson {
 // ── Data loading ──────────────────────────────────────────────────────────────
 async function loadCourse(slug: string): Promise<Course | null> {
   try {
-    // Try slug-based lookup, then re-fetch via documentId to get lessons populated
-    const res = await api.get<ApiListResponse<Course>>(
-      `/courses?filters[slug][$eq]=${encodeURIComponent(slug)}`,
-    );
-    const found = res.data?.[0];
+    // First try as documentId directly
+    const res = await api.get<{ data: Course }>(`/courses/${encodeURIComponent(slug)}`);
+    if (res.data) return res.data;
+  } catch {}
+  try {
+    // Fallback: slug-based lookup via list endpoint
+    const res = await api.get<ApiListResponse<Course>>(`/courses`);
+    const found = res.data?.find((c) => c.slug === slug);
     if (found) {
       const full = await api.get<{ data: Course }>(`/courses/${found.documentId}`);
       return full.data ?? found;
     }
-  } catch {}
-  try {
-    // Fallback: treat as documentId directly
-    const res = await api.get<{ data: Course }>(`/courses/${encodeURIComponent(slug)}`);
-    if (res.data) return res.data;
   } catch {}
   return null;
 }
@@ -273,9 +271,9 @@ function LearnPageInner() {
     <div className="flex flex-col min-h-[calc(100vh-3.75rem)] -m-6">
       {/* ── Top bar ─────────────────────────────────────────────────────── */}
       <div className="flex items-center gap-3 px-4 py-3 border-b border-neutral-200 bg-white shrink-0">
-        <Link href="/my-learning" className="flex items-center gap-1.5 text-sm text-neutral-500 hover:text-neutral-900 no-underline transition-colors shrink-0">
+        <Link href="/student/dashboard" className="flex items-center gap-1.5 text-sm text-neutral-500 hover:text-neutral-900 no-underline transition-colors shrink-0">
           <ArrowLeft size={15} />
-          <span className="hidden sm:inline">My Learning</span>
+          <span className="hidden sm:inline">My Courses</span>
         </Link>
         <div className="h-4 w-px bg-neutral-200 shrink-0" />
         <p className="text-sm font-semibold text-neutral-900 truncate flex-1">{course.title}</p>
