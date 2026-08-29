@@ -17,19 +17,20 @@ function resolveUrl(url: string | undefined | null): string | null {
 
 async function getCourse(slug: string): Promise<Course | null> {
   try {
-    // Try by slug first
+    // Try as documentId directly
+    const res = await api.get<{ data: Course }>(
+      `/courses/${encodeURIComponent(slug)}?populate[instructor]=true&populate[lessons]=true&populate[thumbnail]=true`,
+      { token: null },
+    );
+    if (res.data) return res.data;
+  } catch {}
+  try {
+    // Fallback: fetch all and find by slug
     const res = await api.get<ApiListResponse<Course>>(
-      `/courses?filters[slug][$eq]=${encodeURIComponent(slug)}&populate[instructor]=true&populate[lessons]=true&populate[thumbnail]=true`,
+      `/courses?populate[instructor]=true&populate[lessons]=true&populate[thumbnail]=true&pagination[pageSize]=100`,
       { token: null },
     );
-    if (res.data?.[0]) return res.data[0];
-
-    // Fallback: try by documentId
-    const res2 = await api.get<ApiListResponse<Course>>(
-      `/courses?filters[documentId][$eq]=${encodeURIComponent(slug)}&populate[instructor]=true&populate[lessons]=true&populate[thumbnail]=true`,
-      { token: null },
-    );
-    return res2.data?.[0] ?? null;
+    return res.data?.find((c) => c.slug === slug) ?? null;
   } catch {
     return null;
   }
