@@ -8,8 +8,12 @@ export default factories.createCoreController('api::quiz-result.quiz-result' as 
     const populate = ['student', 'quiz', 'quiz.course'];
 
     if (isRole(user, 'student')) {
+      const where: any = { student: user.id };
+      const filters = (ctx.query as Record<string, any> | undefined)?.filters;
+      const quizDocId = filters?.quiz?.documentId?.$eq;
+      if (quizDocId) where.quiz = { documentId: String(quizDocId) };
       const results = await strapi.db.query('api::quiz-result.quiz-result').findMany({
-        where: { student: user.id },
+        where,
         populate,
         orderBy: { submittedAt: 'desc' },
         limit: 100,
