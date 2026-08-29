@@ -9,7 +9,7 @@ export default factories.createCoreController('api::quiz-result.quiz-result' as 
 
     if (isRole(user, 'student')) {
       const where: any = { student: user.id };
-      const filters = (ctx.query as Record<string, any> | undefined)?.filters;
+      const filters = (ctx.query?.filters ?? {}) as any;
       const quizDocId = filters?.quiz?.documentId?.$eq;
       if (quizDocId) where.quiz = { documentId: String(quizDocId) };
       const results = await strapi.db.query('api::quiz-result.quiz-result').findMany({
